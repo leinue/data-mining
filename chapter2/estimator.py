@@ -9,6 +9,8 @@ from sklearn.cross_validation import cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MinMaxScaler
 
+from sklearn.pipeline import Pipeline
+
 data_filder = './data'
 
 data_filename = os.path.join(data_filder, '', 'ionosphere.data')
@@ -63,5 +65,17 @@ x_transformed = MinMaxScaler().fit_transform(x_broken)
 estimator = KNeighborsClassifier()
 transformed_scores = cross_val_score(estimator, x_transformed, y, scoring='accuracy')
 print(np.mean(transformed_scores) * 100)
+
+
+scaling_pipeline = Pipeline(
+    [
+        ('scale', MinMaxScaler()),
+        ('predict', KNeighborsClassifier())
+    ]
+)
+
+scores = cross_val_score(scaling_pipeline, x_broken, y, scoring='accuracy')
+
+print(np.mean(scores) * 100)
 
 
